@@ -9,6 +9,7 @@ module.exports = getBaseWebpackConfig(
 	{
 		mode: process.env.NODE_ENV || 'production',
 		entry: {
+			editor: './src/editor/index.js',
 			client: './src/client/index.js',
 		},
 	}

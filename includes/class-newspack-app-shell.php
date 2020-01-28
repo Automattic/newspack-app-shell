@@ -38,8 +38,10 @@ final class Newspack_App_Shell {
 	 */
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_script' ) );
+		add_action( 'enqueue_block_editor_assets', array( __CLASS__, 'enqueue_block_editor_assets' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu_item' ) );
 		add_action( 'init', array( __CLASS__, 'register_cpt' ) );
+		add_action( 'init', array( __CLASS__, 'register_meta' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'insert_persistent_content' ) );
 	}
 
@@ -57,6 +59,22 @@ final class Newspack_App_Shell {
 		\register_post_type( self::NEWSPACK_APP_SHELL_CPT, $cpt_args );
 	}
 
+	/**
+	 * Register meta fields for the CPT.
+	 */
+	public static function register_meta() {
+		\register_meta(
+			'post',
+			'is_fixed',
+			array(
+				'object_subtype' => self::NEWSPACK_APP_SHELL_CPT,
+				'show_in_rest'   => true,
+				'type'           => 'boolean',
+				'single'         => true,
+				'auth_callback'  => '__return_true',
+			)
+		);
+	}
 
 	/**
 	 * Add menu item. If the custom post exists, link to editing. If not, link to new post.
@@ -97,8 +115,14 @@ final class Newspack_App_Shell {
 	public static function insert_persistent_content() {
 		$id = self::post_id();
 		if ( $id ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo get_post( $id )->post_content;
+			?>
+			<div class="newspack-app-shell-wrapper">
+				<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo get_post( $id )->post_content;
+				?>
+			</div>
+			<?php
 		}
 	}
 
@@ -124,6 +148,25 @@ final class Newspack_App_Shell {
 			sprintf( 'var APP_SHELL_WP_DATA = %s;', wp_json_encode( $exports ) ),
 			'before'
 		);
+	}
+
+	/**
+	 * Load editor JS script
+	 */
+	public static function enqueue_block_editor_assets() {
+		$screen = get_current_screen();
+		if ( self::NEWSPACK_APP_SHELL_CPT !== $screen->post_type ) {
+			return;
+		}
+
+		wp_register_script(
+			'newspack-app-shell-editor',
+			plugins_url( '/newspack-app-shell' ) . '/dist/editor.js',
+			array(),
+			filemtime( dirname( NEWSPACK_APP_SHELL_PLUGIN_FILE ) . '/dist/editor.js' ),
+			true
+		);
+		wp_enqueue_script( 'newspack-app-shell-editor' );
 	}
 }
 
