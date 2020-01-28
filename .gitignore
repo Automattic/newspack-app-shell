@@ -1,0 +1,23 @@
+# Editors
+project.xml
+project.properties
+/nbproject/private/
+.buildpath
+.project
+.settings*
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+.sublimelinterrc
+
+
+# OS X metadata
+.DS_Store
+
+# deps
+node_modules
+vendor
+
+# build files
+dist

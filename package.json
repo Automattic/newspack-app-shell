@@ -1,0 +1,17 @@
+{
+  "name": "newspack-app-shell",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Automattic",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "calypso-build",
+    "dev": "calypso-build --watch",
+    "start": "npm run dev"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "devDependencies": {
+    "@automattic/calypso-build": "^6.0.0"
+  }
+}
