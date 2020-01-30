@@ -1,7 +1,6 @@
 /**
  * External dependencies
  */
-const fs = require('fs');
 const getBaseWebpackConfig = require('@automattic/calypso-build/webpack.config.js');
 
 module.exports = getBaseWebpackConfig(
