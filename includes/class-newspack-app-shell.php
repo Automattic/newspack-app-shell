@@ -48,7 +48,6 @@ final class Newspack_App_Shell {
 	 */
 	public static function register_cpt() {
 		$cpt_args = array(
-			'labels'       => array(),
 			'public'       => false,
 			'show_ui'      => true,
 			'show_in_rest' => true,
@@ -56,7 +55,6 @@ final class Newspack_App_Shell {
 		);
 		\register_post_type( self::NEWSPACK_APP_SHELL_CPT, $cpt_args );
 	}
-
 
 	/**
 	 * Add menu item. If the custom post exists, link to editing. If not, link to new post.
@@ -67,8 +65,8 @@ final class Newspack_App_Shell {
 		$url    = $id ? admin_url( '/post.php?post=' . $id . '&action=edit' ) : admin_url( '/post-new.php?post_type=' . self::NEWSPACK_APP_SHELL_CPT );
 
 		add_menu_page(
-			$action . ' Persistent element',
-			$action . ' Persistent element',
+			$id ? __( 'Edit Persistent element', 'newspack-app-shell' ) : __( 'Add Persistent element', 'newspack-app-shell' ),
+			$id ? __( 'Edit Persistent element', 'newspack-app-shell' ) : __( 'Add Persistent element', 'newspack-app-shell' ),
 			'manage_options',
 			$url,
 			'',
@@ -81,14 +79,14 @@ final class Newspack_App_Shell {
 	 * Check if there is a post to store the persistent content.
 	 */
 	public static function post_id() {
-		$query = new WP_Query(
+		$posts = get_posts(
 			array(
-				'post_type' => self::NEWSPACK_APP_SHELL_CPT,
+				'post_type'      => self::NEWSPACK_APP_SHELL_CPT,
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
 			)
 		);
-		if ( $query->have_posts() ) {
-			return $query->posts[0]->ID;
-		}
+		return $posts ? $posts[0] : false;
 	}
 
 	/**
@@ -98,7 +96,7 @@ final class Newspack_App_Shell {
 		$id = self::post_id();
 		if ( $id ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo get_post( $id )->post_content;
+			echo get_the_content( null, false, $id );
 		}
 	}
 
