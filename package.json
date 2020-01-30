@@ -12,6 +12,7 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
+    "element-closest": "^3.0.2",
     "lodash.difference": "^4.5.0",
     "string-hash": "^1.1.3"
   },

@@ -5,6 +5,8 @@
  */
 import { fetchDocument } from './fetch';
 import { hashDOMNode, compareDOMNodeCollections, fireEvent } from './utils';
+// polyfill, as there is no support in IE11
+import 'element-closest';
 
 /**
  * Attach event handlers to the document.
@@ -71,11 +73,24 @@ function handleSubmit(event) {
  * Handler for click events fired on links.
  */
 function handleClick(event) {
-	const { href } = event.target;
+	let { href } = event.target;
+
+	// if there is no href on the element, perhaps it's a child of an anchor
+	if (!href) {
+		const closestAnchorElement = event.target.closest('a');
+		if (closestAnchorElement) {
+			href = closestAnchorElement.getAttribute('href');
+		}
+	}
+
+	// still no href, bail
+	if (!href) {
+		return;
+	}
+
 	const url = new URL(href);
 
 	if (
-		!event.target.matches('a[href]') ||
 		event.target.closest('#wpadminbar') ||
 		// Skip handling click if it was handled already.
 		event.defaultPrevented ||
