@@ -1,0 +1,23 @@
+.newspack-app-shell-wrapper {
+	width: 100%;
+	&--top-fixed,
+	&--bottom-fixed {
+		position: fixed;
+		z-index: 999;
+		left: 0;
+	}
+	&--top-fixed {
+		top: 0;
+	}
+	&--bottom-fixed {
+		bottom: 0;
+	}
+}
+
+body.admin-bar {
+	.newspack-app-shell-wrapper {
+		&--top-fixed {
+			padding-top: 32px;
+		}
+	}
+}
