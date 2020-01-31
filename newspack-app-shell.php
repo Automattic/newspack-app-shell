@@ -11,3 +11,15 @@
  *
  * @package Newspack_App_Shell
  */
+
+defined( 'ABSPATH' ) || exit;
+
+// Define NEWSPACK_APP_SHELL_PLUGIN_FILE.
+if ( ! defined( 'NEWSPACK_APP_SHELL_PLUGIN_FILE' ) ) {
+	define( 'NEWSPACK_APP_SHELL_PLUGIN_FILE', __FILE__ );
+}
+
+// Include the main Newspack App Shell class.
+if ( ! class_exists( 'Newspack_App_Shell' ) ) {
+	include_once dirname( __FILE__ ) . '/includes/class-newspack-app-shell.php';
+}

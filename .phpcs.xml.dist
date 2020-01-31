@@ -31,13 +31,13 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
-			<property name="prefixes" type="array" value="newspack_blocks,NEWSPACK_BLOCKS"/>
+			<property name="prefixes" type="array" value="newspack_app_shell,NEWSPACK_APP_SHELL"/>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<!-- Value: replace the text domain used. -->
-			<property name="text_domain" type="array" value="newspack-blocks"/>
+			<property name="text_domain" type="array" value="newspack-app-shell"/>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
