@@ -170,6 +170,9 @@ function loadUrl(url, options = {}) {
 
 		document.body.classList.remove('newspack-app-shell-transitioning');
 
+		// Fire Jetpack's lazy load images initalisation
+		document.body.dispatchEvent(new Event('jetpack-lazy-images-load'))
+
 		fireEvent('newspack-app-shell-ready');
 	});
 }
