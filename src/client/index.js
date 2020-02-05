@@ -39,6 +39,8 @@ function isLoadableURL( url ) {
 
 /**
  * Handle form submission - e.g. search.
+ *
+ * @param event
  */
 function handleSubmit( event ) {
 	if (
@@ -71,6 +73,8 @@ function handleSubmit( event ) {
 
 /**
  * Handler for click events fired on links.
+ *
+ * @param event
  */
 function handleClick( event ) {
 	let { href } = event.target;
@@ -113,6 +117,9 @@ const CONTENT_ELEMENT_ID = 'page';
 /**
  * Fetches HTML document by URL, then replaces the perinent DOM elements
  * with new content.
+ *
+ * @param url
+ * @param options
  */
 function loadUrl( url, options = {} ) {
 	fireEvent( 'newspack-app-shell-navigate' );

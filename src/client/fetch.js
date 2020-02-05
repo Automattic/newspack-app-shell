@@ -3,7 +3,7 @@
 // unfortunately fetch() does not support retrieving documents,
 // so we have to resort to good old XMLHttpRequest.
 export const fetchDocument = url => {
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
 
 	return new Promise( function( resolve, reject ) {
 		xhr.open( 'GET', url, true );

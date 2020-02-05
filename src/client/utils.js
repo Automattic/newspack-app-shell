@@ -6,6 +6,8 @@ import difference from 'lodash.difference';
 
 /**
  * Takes a DOM node and returns a content hash.
+ *
+ * @param node
  */
 export function hashDOMNode( node ) {
 	return stringHash(
@@ -45,6 +47,8 @@ export function compareDOMNodeCollections( collection, newCollection ) {
 
 /**
  * Fire custom events.
+ *
+ * @param name
  */
 export function fireEvent( name ) {
 	const readyEvent = new CustomEvent( name, {
