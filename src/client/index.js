@@ -1,12 +1,16 @@
 // based on https://github.com/ampproject/amp-wp/pull/1519
 
 /**
+ * External dependencies
+ */
+// polyfill, as there is no support in IE11
+import 'element-closest';
+
+/**
  * Internal dependencies
  */
 import { fetchDocument } from './fetch';
 import { hashDOMNode, compareDOMNodeCollections, fireEvent } from './utils';
-// polyfill, as there is no support in IE11
-import 'element-closest';
 
 /**
  * Attach event handlers to the document.
@@ -43,13 +47,40 @@ function isLoadableURL(url) {
 }
 
 /**
- * Handle form submission - e.g. search.
+ * Handle form submission - e.g. search, comments.
  */
 function handleSubmit(event) {
+	const { target } = event;
+
+	if (target.method.toUpperCase() === 'POST' && target.tagName === 'FORM') {
+		const formData = new URLSearchParams(new FormData(target));
+
+		const submitButton = target.querySelector('[type="submit"]');
+		submitButton.setAttribute('disabled', 'true');
+
+		fetch(target.getAttribute('action'), {
+			method: 'POST',
+			body: formData,
+		})
+			.then(res => res.text())
+			.then(res => {
+				// WP returns an error page in case of submission failure
+				if (res.indexOf('<body id="error-page">') > 0) {
+					// TODO: handle that - replace form with page content?
+					// parse body, w/out JS? lol
+					console.log('ERROROR');
+				}
+				// re-load - with the new comment
+				loadUrl(window.location.href);
+			});
+
+		event.preventDefault();
+	}
+
 	if (
-		!event.target.matches('form[action]') ||
-		event.target.method.toUpperCase() !== 'GET' ||
-		event.target.closest('#wpadminbar')
+		!target.matches('form[action]') ||
+		target.method.toUpperCase() !== 'GET' ||
+		target.closest('#wpadminbar')
 	) {
 		return;
 	}
@@ -59,12 +90,12 @@ function handleSubmit(event) {
 		return;
 	}
 
-	const url = new URL(event.target.action);
+	const url = new URL(target.action);
 	if (!isLoadableURL(url)) {
 		return;
 	}
 
-	for (const element of event.target.elements) {
+	for (const element of target.elements) {
 		if (element.name && !element.disabled) {
 			// @todo Need to handle radios, checkboxes, submit buttons, etc.
 			url.searchParams.set(element.name, element.value);
