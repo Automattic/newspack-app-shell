@@ -1,10 +1,12 @@
 // based on https://github.com/ampproject/amp-wp/pull/1519
 
+/* global APP_SHELL_WP_DATA */
+
 /**
  * Internal dependencies
  */
 import { fetchDocument } from './fetch';
-import { hashDOMNode, compareDOMNodeCollections, fireEvent } from './utils';
+import { compareDOMNodeCollections, fireEvent } from './utils';
 // polyfill, as there is no support in IE11
 import 'element-closest';
 
@@ -40,7 +42,7 @@ function isLoadableURL( url ) {
 /**
  * Handle form submission - e.g. search.
  *
- * @param event
+ * @param {event} event DOM event
  */
 function handleSubmit( event ) {
 	if (
@@ -74,7 +76,7 @@ function handleSubmit( event ) {
 /**
  * Handler for click events fired on links.
  *
- * @param event
+ * @param {event} event DOM event
  */
 function handleClick( event ) {
 	let { href } = event.target;
@@ -118,8 +120,8 @@ const CONTENT_ELEMENT_ID = 'page';
  * Fetches HTML document by URL, then replaces the perinent DOM elements
  * with new content.
  *
- * @param url
- * @param options
+ * @param {string} url the URL of the document to fetch
+ * @param {Object} options options
  */
 function loadUrl( url, options = {} ) {
 	fireEvent( 'newspack-app-shell-navigate' );
@@ -149,12 +151,12 @@ function loadUrl( url, options = {} ) {
 			document.querySelectorAll( 'body > *' ),
 			doc.querySelectorAll( 'body > *' )
 		);
-		bodyDiff.toRemove.map( el => {
+		bodyDiff.toRemove.forEach( el => {
 			if ( canChangeBodyEl( el ) ) {
 				document.body.removeChild( el );
 			}
 		} );
-		bodyDiff.toAdd.map( el => {
+		bodyDiff.toAdd.forEach( el => {
 			if ( canChangeBodyEl( el ) ) {
 				document.body.appendChild( el );
 			}

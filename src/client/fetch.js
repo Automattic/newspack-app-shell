@@ -5,7 +5,7 @@
 export const fetchDocument = url => {
 	const xhr = new XMLHttpRequest();
 
-	return new Promise( function( resolve, reject ) {
+	return new Promise( function( resolve ) {
 		xhr.open( 'GET', url, true );
 		xhr.responseType = 'document';
 		xhr.setRequestHeader( 'Accept', 'text/html' );

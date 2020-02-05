@@ -7,7 +7,8 @@ import difference from 'lodash.difference';
 /**
  * Takes a DOM node and returns a content hash.
  *
- * @param node
+ * @param {HTMLElement} node DOM node
+ * @return {number} number result of the DOM node hashing
  */
 export function hashDOMNode( node ) {
 	return stringHash(
@@ -23,8 +24,9 @@ export function hashDOMNode( node ) {
 /**
  * Compare two collections of nodes.
  *
- * @param  {NodeList} collection
- * @param  {NodeList} newCollection
+ * @param  {NodeList} collection list of nodes
+ * @param  {NodeList} newCollection list of nodes
+ * @return  {Object} Object with DOM elements to add and to remove
  */
 export function compareDOMNodeCollections( collection, newCollection ) {
 	const headNodes = [ ...collection ].reduce( ( acc, val ) => {
@@ -48,7 +50,7 @@ export function compareDOMNodeCollections( collection, newCollection ) {
 /**
  * Fire custom events.
  *
- * @param name
+ * @param {string} name name of the custom event
  */
 export function fireEvent( name ) {
 	const readyEvent = new CustomEvent( name, {
