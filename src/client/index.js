@@ -14,11 +14,16 @@ import 'element-closest';
 function attachNavigationHandlers() {
 	document.body.addEventListener('click', handleClick);
 	document.body.addEventListener('submit', handleSubmit);
-	window.addEventListener('popstate', () => {
-		loadUrl(window.location.href);
-	});
+	window.addEventListener('popstate', handlePopState);
 }
 attachNavigationHandlers();
+
+/**
+ * Handle history events.
+ */
+function handlePopState () {
+	loadUrl(window.location.href);
+}
 
 /**
  * Is a loadable URL.
