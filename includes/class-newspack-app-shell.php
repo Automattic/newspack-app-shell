@@ -133,12 +133,12 @@ final class Newspack_App_Shell {
 		);
 		if ( $id ) {
 			?>
-			<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+			<span class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 				<?php
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo get_the_content( null, false, $id );
 				?>
-			</div>
+			</span>
 			<?php
 		}
 	}
