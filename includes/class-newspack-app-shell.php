@@ -49,6 +49,7 @@ final class Newspack_App_Shell {
 	public static function register_cpt() {
 		$cpt_args = array(
 			'public'       => false,
+			'show_in_menu' => false,
 			'show_ui'      => true,
 			'show_in_rest' => true,
 			'supports'     => array( 'editor' ),
