@@ -10,7 +10,7 @@ import 'element-closest';
  * Internal dependencies
  */
 import { fetchDocument } from './fetch';
-import { hashDOMNode, compareDOMNodeCollections, fireEvent } from './utils';
+import { hashDOMNode, compareDOMNodeCollections, fireEvent, updateFormErrorMessage } from './utils';
 import './client.scss'
 
 /**
@@ -72,12 +72,18 @@ function handleSubmit(event) {
 			.then(res => {
 				// WP returns an error page in case of submission failure
 				if (res.indexOf('<body id="error-page">') > 0) {
-					// TODO: handle that - replace form with page content?
-					// parse body, w/out JS? lol
-					console.log('ERROROR');
+					const tmpEl = document.createElement('div')
+					tmpEl.innerHTML = res
+					const dieMessageEl = tmpEl.querySelector('.wp-die-message')
+					if (dieMessageEl) {
+						updateFormErrorMessage(target, dieMessageEl.innerText)
+					}
+					target.classList.remove('newspack-app-shell-form--disabled')
+					submitButton.removeAttribute('disabled');
+				} else {
+					// re-load - with the new comment
+					loadUrl(window.location.href);
 				}
-				// re-load - with the new comment
-				loadUrl(window.location.href);
 			});
 
 		event.preventDefault();

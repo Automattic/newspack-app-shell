@@ -2,7 +2,12 @@ form {
   transition: opacity 200ms;
 }
 
-form.newspack-app-shell-form--disabled {
-  opacity: 0.5;
-  pointer-events: none;
+.newspack-app-shell-form { 
+  &--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  &__error {
+    color: red;
+  }
 }
