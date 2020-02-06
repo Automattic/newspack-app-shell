@@ -11,6 +11,7 @@ import 'element-closest';
  */
 import { fetchDocument } from './fetch';
 import { hashDOMNode, compareDOMNodeCollections, fireEvent } from './utils';
+import './client.scss'
 
 /**
  * Attach event handlers to the document.
@@ -52,8 +53,13 @@ function isLoadableURL(url) {
 function handleSubmit(event) {
 	const { target } = event;
 
-	if (target.method.toUpperCase() === 'POST' && target.tagName === 'FORM') {
+	if (
+		target.matches('form[action]') &&
+		target.method.toUpperCase() === 'POST' &&
+		target.tagName.toUpperCase() === 'FORM'
+	) {
 		const formData = new URLSearchParams(new FormData(target));
+		target.classList.add('newspack-app-shell-form--disabled')
 
 		const submitButton = target.querySelector('[type="submit"]');
 		submitButton.setAttribute('disabled', 'true');

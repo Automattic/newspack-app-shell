@@ -122,6 +122,13 @@ final class Newspack_App_Shell {
 			sprintf( 'var APP_SHELL_WP_DATA = %s;', wp_json_encode( $exports ) ),
 			'before'
 		);
+
+		wp_enqueue_style(
+			'newspack-app-shell-styles',
+			plugins_url( '../dist/client.css', __FILE__ ),
+			null,
+			filemtime( dirname( NEWSPACK_APP_SHELL_PLUGIN_FILE ) . '/dist/client.css' )
+		);
 	}
 }
 
