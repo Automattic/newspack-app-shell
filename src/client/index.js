@@ -126,11 +126,24 @@ function loadUrl(url, options = {}) {
 
 	fetchDocument(url).then(function(doc) {
 		// get HTML content
-		const pageHTML = doc.getElementById(CONTENT_ELEMENT_ID).innerHTML;
+		const pageContent = doc.getElementById(CONTENT_ELEMENT_ID);
+		const pageHTML = pageContent.innerHTML;
 
 		// replace the #page contents
 		const container = document.getElementById(CONTENT_ELEMENT_ID);
 		container.innerHTML = pageHTML;
+
+		// Run any scripts that were in the page contents - scripts injected
+		// via setting innerHTML are not executed.
+		[...pageContent.querySelectorAll("script")].forEach( oldScript => {
+			const newScript = document.createElement("script");
+			[...oldScript.attributes]
+				.forEach( attr => newScript.setAttribute(attr.name, attr.value) );
+			newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+			// Note: for some reason, replaceChild on parent element did not
+			// result in executing the script.
+			document.body.appendChild(newScript);
+		});
 
 		// diff head and update all elements
 		const headDiff = compareDOMNodeCollections(
