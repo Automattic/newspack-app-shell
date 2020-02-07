@@ -124,6 +124,7 @@ final class Newspack_App_Shell {
 	 * Insert the persistent content
 	 */
 	public static function insert_persistent_content() {
+		$is_amp          = function_exists( 'is_amp_endpoint' ) && is_amp_endpoint();
 		$id              = self::post_id();
 		$is_top_fixed    = get_post_meta( $id, 'is_top_fixed', true );
 		$is_bottom_fixed = get_post_meta( $id, 'is_bottom_fixed', true );
@@ -131,15 +132,22 @@ final class Newspack_App_Shell {
 			'newspack-app-shell-wrapper',
 			$is_bottom_fixed ? 'newspack-app-shell-wrapper--bottom-fixed' : '',
 			$is_top_fixed ? 'newspack-app-shell-wrapper--top-fixed' : '',
+			$is_amp ? 'newspack-app-shell-wrapper--from-amp-link' : '',
 		);
+		$wrapper_tag     = $is_amp ? 'a' : 'span';
 		if ( $id ) {
 			?>
-			<span class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+			<<?php echo esc_html( $wrapper_tag ); ?>
+				class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"
+				<?php if ( $is_amp ) : ?>
+					href="<?php echo esc_html( remove_query_arg( 'amp' ) ); ?>" rel="noamphtml"
+				<?php endif; ?>
+			>
 				<?php
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo get_the_content( null, false, $id );
 				?>
-			</span>
+			</<?php echo esc_html( $wrapper_tag ); ?>>
 			<?php
 		}
 	}
