@@ -5,14 +5,13 @@
   "author": "Automattic",
   "scripts": {
     "cm": "git-cz",
-    "semantic-release": "semantic-release",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "calypso-build",
     "dev": "NODE_ENV=development calypso-build --watch",
     "start": "npm run dev",
     "clean": "rm -rf dist release",
     "release:archive": "mkdir -p release && zip -r release/newspack-app-shell.zip . -x node_modules/\\* vendor/\\* src/\\* .git/\\* .github/\\* .gitignore .DS_Store",
-    "release": "npm run build && npm run release:archive"
+    "release": "npm run build && npm run semantic-release"
   },
   "keywords": [],
   "license": "ISC",
@@ -30,7 +29,7 @@
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.1.0",
     "semantic-release": "^17.0.2",
-    "semantic-release-version-bump": "^1.1.0"
+    "semantic-release-version-bump": "^1.3.0"
   },
   "config": {
     "commitizen": {
