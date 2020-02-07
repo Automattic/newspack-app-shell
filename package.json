@@ -11,7 +11,8 @@
     "dev": "NODE_ENV=development calypso-build --watch",
     "start": "npm run dev",
     "clean": "rm -rf dist release",
-    "release": "mkdir -p release && zip -r release/newspack-app-shell.zip . -x node_modules/\\* .git/\\* .github/\\* .gitignore .DS_Store"
+    "release:archive": "mkdir -p release && zip -r release/newspack-app-shell.zip . -x node_modules/\\* vendor/\\* src/\\* .git/\\* .github/\\* .gitignore .DS_Store",
+    "release": "npm run build && npm run release:archive"
   },
   "keywords": [],
   "license": "ISC",
