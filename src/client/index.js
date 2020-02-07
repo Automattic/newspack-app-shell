@@ -1,12 +1,17 @@
 // based on https://github.com/ampproject/amp-wp/pull/1519
 
 /**
+ * External dependencies
+ */
+// polyfill, as there is no support in IE11
+import 'element-closest';
+
+/**
  * Internal dependencies
  */
 import { fetchDocument } from './fetch';
 import { hashDOMNode, compareDOMNodeCollections, fireEvent } from './utils';
-// polyfill, as there is no support in IE11
-import 'element-closest';
+import './style.scss';
 
 /**
  * Attach event handlers to the document.
