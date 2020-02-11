@@ -11,7 +11,7 @@ import 'element-closest';
  */
 import { fetchDocument } from './fetch';
 import { hashDOMNode, compareDOMNodeCollections, fireEvent, updateFormErrorMessage } from './utils';
-import './client.scss'
+import './style.scss';
 
 /**
  * Attach event handlers to the document.
@@ -26,7 +26,7 @@ attachNavigationHandlers();
 /**
  * Handle history events.
  */
-function handlePopState () {
+function handlePopState() {
 	loadUrl(window.location.href);
 }
 
@@ -59,7 +59,7 @@ function handleSubmit(event) {
 		target.tagName.toUpperCase() === 'FORM'
 	) {
 		const formData = new URLSearchParams(new FormData(target));
-		target.classList.add('newspack-app-shell-form--disabled')
+		target.classList.add('newspack-app-shell-form--disabled');
 
 		const submitButton = target.querySelector('[type="submit"]');
 		submitButton.setAttribute('disabled', 'true');
@@ -72,13 +72,13 @@ function handleSubmit(event) {
 			.then(res => {
 				// WP returns an error page in case of submission failure
 				if (res.indexOf('<body id="error-page">') > 0) {
-					const tmpEl = document.createElement('div')
-					tmpEl.innerHTML = res
-					const dieMessageEl = tmpEl.querySelector('.wp-die-message')
+					const tmpEl = document.createElement('div');
+					tmpEl.innerHTML = res;
+					const dieMessageEl = tmpEl.querySelector('.wp-die-message');
 					if (dieMessageEl) {
-						updateFormErrorMessage(target, dieMessageEl.innerText)
+						updateFormErrorMessage(target, dieMessageEl.innerText);
 					}
-					target.classList.remove('newspack-app-shell-form--disabled')
+					target.classList.remove('newspack-app-shell-form--disabled');
 					submitButton.removeAttribute('disabled');
 				} else {
 					// re-load - with the new comment
@@ -169,11 +169,23 @@ function loadUrl(url, options = {}) {
 
 	fetchDocument(url).then(function(doc) {
 		// get HTML content
-		const pageHTML = doc.getElementById(CONTENT_ELEMENT_ID).innerHTML;
+		const pageContent = doc.getElementById(CONTENT_ELEMENT_ID);
+		const pageHTML = pageContent.innerHTML;
 
 		// replace the #page contents
 		const container = document.getElementById(CONTENT_ELEMENT_ID);
 		container.innerHTML = pageHTML;
+
+		// Run any scripts that were in the page contents - scripts injected
+		// via setting innerHTML are not executed.
+		[...pageContent.querySelectorAll('script')].forEach(oldScript => {
+			const newScript = document.createElement('script');
+			[...oldScript.attributes].forEach(attr => newScript.setAttribute(attr.name, attr.value));
+			newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+			// Note: for some reason, replaceChild on parent element did not
+			// result in executing the script.
+			document.body.appendChild(newScript);
+		});
 
 		// diff head and update all elements
 		const headDiff = compareDOMNodeCollections(
@@ -219,7 +231,7 @@ function loadUrl(url, options = {}) {
 		document.body.classList.remove('newspack-app-shell-transitioning');
 
 		// Fire Jetpack's lazy load images initalisation
-		document.body.dispatchEvent(new Event('jetpack-lazy-images-load'))
+		document.body.dispatchEvent(new Event('jetpack-lazy-images-load'));
 
 		fireEvent('newspack-app-shell-ready');
 	});
