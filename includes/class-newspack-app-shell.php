@@ -148,6 +148,11 @@ final class Newspack_App_Shell {
 	 * Load client JS script
 	 */
 	public static function enqueue_scripts_and_style() {
+		if ( ! self::post_id() ) {
+			// No persistent element set, bail.
+			return;
+		}
+
 		wp_register_script(
 			'newspack-app-shell',
 			plugins_url( '/newspack-app-shell' ) . '/dist/client.js',
