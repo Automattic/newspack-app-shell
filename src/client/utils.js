@@ -60,19 +60,22 @@ export function fireEvent( name ) {
 	window.dispatchEvent( readyEvent );
 }
 
-const FORM_ERROR_MESSAGE_CLASS = 'newspack-app-shell-form__error'
+const FORM_ERROR_MESSAGE_CLASS = 'newspack-app-shell-form__error';
 
 /**
  * Display form submission error message.
+ *
+ * @param {HTMLElement} formEl form element
+ * @param {string} message message
  */
-export function updateFormErrorMessage (formEl, message) {
-	const foundEl = formEl.querySelector(`.${FORM_ERROR_MESSAGE_CLASS}`)
-	if (foundEl) {
-		foundEl.innerHTML = message
+export function updateFormErrorMessage( formEl, message ) {
+	const foundEl = formEl.querySelector( `.${ FORM_ERROR_MESSAGE_CLASS }` );
+	if ( foundEl ) {
+		foundEl.innerHTML = message;
 	} else {
-		const messageEl = document.createElement('div')
-		messageEl.innerHTML = message
-		messageEl.classList.add(FORM_ERROR_MESSAGE_CLASS)
-		formEl.prepend(messageEl)
+		const messageEl = document.createElement( 'div' );
+		messageEl.innerHTML = message;
+		messageEl.classList.add( FORM_ERROR_MESSAGE_CLASS );
+		formEl.prepend( messageEl );
 	}
 }
