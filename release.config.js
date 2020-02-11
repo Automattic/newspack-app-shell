@@ -30,7 +30,7 @@ module.exports = {
 			{
 				assets: [
 					{
-						path: './assets/release/newspack-app-shell.zip',
+						path: './release/newspack-app-shell.zip',
 						label: 'newspack-app-shell.zip',
 					},
 				],

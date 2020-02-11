@@ -3,24 +3,34 @@
 /* global APP_SHELL_WP_DATA */
 
 /**
+ * External dependencies
+ */
+// polyfill, as there is no support in IE11
+import 'element-closest';
+
+/**
  * Internal dependencies
  */
 import { fetchDocument } from './fetch';
-import { compareDOMNodeCollections, fireEvent } from './utils';
-// polyfill, as there is no support in IE11
-import 'element-closest';
+import { hashDOMNode, compareDOMNodeCollections, fireEvent, updateFormErrorMessage } from './utils';
+import './style.scss';
 
 /**
  * Attach event handlers to the document.
  */
 function attachNavigationHandlers() {
-	document.body.addEventListener( 'click', handleClick );
-	document.body.addEventListener( 'submit', handleSubmit );
-	window.addEventListener( 'popstate', () => {
-		loadUrl( window.location.href );
-	} );
+	document.body.addEventListener('click', handleClick);
+	document.body.addEventListener('submit', handleSubmit);
+	window.addEventListener('popstate', handlePopState);
 }
 attachNavigationHandlers();
+
+/**
+ * Handle history events.
+ */
+function handlePopState() {
+	loadUrl(window.location.href);
+}
 
 /**
  * Is a loadable URL.
@@ -40,31 +50,69 @@ function isLoadableURL( url ) {
 }
 
 /**
- * Handle form submission - e.g. search.
+ * Handle form submission - e.g. search, comments.
  *
  * @param {event} event DOM event
  */
-function handleSubmit( event ) {
+function handleSubmit(event) {
+	const { target } = event;
+
 	if (
-		! event.target.matches( 'form[action]' ) ||
-		event.target.method.toUpperCase() !== 'GET' ||
-		event.target.closest( '#wpadminbar' )
+		target.matches('form[action]') &&
+		target.method.toUpperCase() === 'POST' &&
+		target.tagName.toUpperCase() === 'FORM'
+	) {
+		const formData = new URLSearchParams(new FormData(target));
+		target.classList.add('newspack-app-shell-form--disabled');
+
+		const submitButton = target.querySelector('[type="submit"]');
+		submitButton.setAttribute('disabled', 'true');
+
+		fetch(target.getAttribute('action'), {
+			method: 'POST',
+			body: formData,
+		})
+			.then(res => res.text())
+			.then(res => {
+				// WP returns an error page in case of submission failure
+				if (res.indexOf('<body id="error-page">') > 0) {
+					const tmpEl = document.createElement('div');
+					tmpEl.innerHTML = res;
+					const dieMessageEl = tmpEl.querySelector('.wp-die-message');
+					if (dieMessageEl) {
+						updateFormErrorMessage(target, dieMessageEl.innerText);
+					}
+					target.classList.remove('newspack-app-shell-form--disabled');
+					submitButton.removeAttribute('disabled');
+				} else {
+					// re-load - with the new comment
+					loadUrl(window.location.href);
+				}
+			});
+
+		event.preventDefault();
+	}
+
+	if (
+		!target.matches('form[action]') ||
+		target.method.toUpperCase() !== 'GET' ||
+		target.closest('#wpadminbar')
 	) {
 		return;
 	}
 
 	// Skip handling click if it was handled already.
-	if ( event.defaultPrevented ) {
+	if (event.defaultPrevented) {
 		return;
 	}
 
-	const url = new URL( event.target.action );
-	if ( ! isLoadableURL( url ) ) {
+	const url = new URL(target.action);
+	if (!isLoadableURL(url)) {
 		return;
 	}
 
-	for ( const element of event.target.elements ) {
-		if ( element.name && ! element.disabled ) {
+	for (const element of target.elements) {
+		if (element.name && !element.disabled) {
 			// @todo Need to handle radios, checkboxes, submit buttons, etc.
 			url.searchParams.set( element.name, element.value );
 		}
@@ -130,11 +178,23 @@ function loadUrl( url, options = {} ) {
 
 	fetchDocument( url ).then( function( doc ) {
 		// get HTML content
-		const pageHTML = doc.getElementById( CONTENT_ELEMENT_ID ).innerHTML;
+		const pageContent = doc.getElementById(CONTENT_ELEMENT_ID);
+		const pageHTML = pageContent.innerHTML;
 
 		// replace the #page contents
 		const container = document.getElementById( CONTENT_ELEMENT_ID );
 		container.innerHTML = pageHTML;
+
+		// Run any scripts that were in the page contents - scripts injected
+		// via setting innerHTML are not executed.
+		[...pageContent.querySelectorAll('script')].forEach(oldScript => {
+			const newScript = document.createElement('script');
+			[...oldScript.attributes].forEach(attr => newScript.setAttribute(attr.name, attr.value));
+			newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+			// Note: for some reason, replaceChild on parent element did not
+			// result in executing the script.
+			document.body.appendChild(newScript);
+		});
 
 		// diff head and update all elements
 		const headDiff = compareDOMNodeCollections(
