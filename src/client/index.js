@@ -10,7 +10,7 @@ import 'element-closest';
  * Internal dependencies
  */
 import { fetchDocument } from './fetch';
-import { hashDOMNode, compareDOMNodeCollections, fireEvent } from './utils';
+import { hashDOMNode, compareDOMNodeCollections, fireEvent, updateFormErrorMessage } from './utils';
 import './style.scss';
 
 /**
@@ -19,11 +19,16 @@ import './style.scss';
 function attachNavigationHandlers() {
 	document.body.addEventListener('click', handleClick);
 	document.body.addEventListener('submit', handleSubmit);
-	window.addEventListener('popstate', () => {
-		loadUrl(window.location.href);
-	});
+	window.addEventListener('popstate', handlePopState);
 }
 attachNavigationHandlers();
+
+/**
+ * Handle history events.
+ */
+function handlePopState() {
+	loadUrl(window.location.href);
+}
 
 /**
  * Is a loadable URL.
@@ -43,13 +48,51 @@ function isLoadableURL(url) {
 }
 
 /**
- * Handle form submission - e.g. search.
+ * Handle form submission - e.g. search, comments.
  */
 function handleSubmit(event) {
+	const { target } = event;
+
 	if (
-		!event.target.matches('form[action]') ||
-		event.target.method.toUpperCase() !== 'GET' ||
-		event.target.closest('#wpadminbar')
+		target.matches('form[action]') &&
+		target.method.toUpperCase() === 'POST' &&
+		target.tagName.toUpperCase() === 'FORM'
+	) {
+		const formData = new URLSearchParams(new FormData(target));
+		target.classList.add('newspack-app-shell-form--disabled');
+
+		const submitButton = target.querySelector('[type="submit"]');
+		submitButton.setAttribute('disabled', 'true');
+
+		fetch(target.getAttribute('action'), {
+			method: 'POST',
+			body: formData,
+		})
+			.then(res => res.text())
+			.then(res => {
+				// WP returns an error page in case of submission failure
+				if (res.indexOf('<body id="error-page">') > 0) {
+					const tmpEl = document.createElement('div');
+					tmpEl.innerHTML = res;
+					const dieMessageEl = tmpEl.querySelector('.wp-die-message');
+					if (dieMessageEl) {
+						updateFormErrorMessage(target, dieMessageEl.innerText);
+					}
+					target.classList.remove('newspack-app-shell-form--disabled');
+					submitButton.removeAttribute('disabled');
+				} else {
+					// re-load - with the new comment
+					loadUrl(window.location.href);
+				}
+			});
+
+		event.preventDefault();
+	}
+
+	if (
+		!target.matches('form[action]') ||
+		target.method.toUpperCase() !== 'GET' ||
+		target.closest('#wpadminbar')
 	) {
 		return;
 	}
@@ -59,12 +102,12 @@ function handleSubmit(event) {
 		return;
 	}
 
-	const url = new URL(event.target.action);
+	const url = new URL(target.action);
 	if (!isLoadableURL(url)) {
 		return;
 	}
 
-	for (const element of event.target.elements) {
+	for (const element of target.elements) {
 		if (element.name && !element.disabled) {
 			// @todo Need to handle radios, checkboxes, submit buttons, etc.
 			url.searchParams.set(element.name, element.value);
@@ -135,10 +178,9 @@ function loadUrl(url, options = {}) {
 
 		// Run any scripts that were in the page contents - scripts injected
 		// via setting innerHTML are not executed.
-		[...pageContent.querySelectorAll("script")].forEach( oldScript => {
-			const newScript = document.createElement("script");
-			[...oldScript.attributes]
-				.forEach( attr => newScript.setAttribute(attr.name, attr.value) );
+		[...pageContent.querySelectorAll('script')].forEach(oldScript => {
+			const newScript = document.createElement('script');
+			[...oldScript.attributes].forEach(attr => newScript.setAttribute(attr.name, attr.value));
 			newScript.appendChild(document.createTextNode(oldScript.innerHTML));
 			// Note: for some reason, replaceChild on parent element did not
 			// result in executing the script.
@@ -189,7 +231,7 @@ function loadUrl(url, options = {}) {
 		document.body.classList.remove('newspack-app-shell-transitioning');
 
 		// Fire Jetpack's lazy load images initalisation
-		document.body.dispatchEvent(new Event('jetpack-lazy-images-load'))
+		document.body.dispatchEvent(new Event('jetpack-lazy-images-load'));
 
 		fireEvent('newspack-app-shell-ready');
 	});
