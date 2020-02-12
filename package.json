@@ -5,6 +5,7 @@
   "author": "Automattic",
   "scripts": {
     "cm": "git-cz",
+    "semantic-release": "semantic-release",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "calypso-build",
     "dev": "NODE_ENV=development calypso-build --watch",
