@@ -10,12 +10,21 @@
     "build": "calypso-build",
     "dev": "NODE_ENV=development calypso-build --watch",
     "start": "npm run dev",
+    "lint": "eslint --ext .js,.jsx src",
+    "format": "prettier 'src/**/*.{js,jsx}' --write",
     "clean": "rm -rf dist release",
-    "release": "mkdir -p release && zip -r release/newspack-app-shell.zip . -x node_modules/\\* .git/\\* .github/\\* .gitignore .DS_Store"
+    "release:archive": "mkdir -p release && zip -r release/newspack-app-shell.zip . -x node_modules/\\* vendor/\\* src/\\* .git/\\* .github/\\* .gitignore .DS_Store",
+    "release": "npm run build && npm run semantic-release"
   },
   "keywords": [],
   "license": "ISC",
   "dependencies": {
+    "@wordpress/components": "^9.2.0",
+    "@wordpress/compose": "^3.11.0",
+    "@wordpress/data": "^4.14.0",
+    "@wordpress/edit-post": "^3.13.0",
+    "@wordpress/i18n": "^3.9.0",
+    "@wordpress/plugins": "^2.12.0",
     "element-closest": "^3.0.2",
     "lodash.difference": "^4.5.0",
     "string-hash": "^1.1.3"
@@ -26,10 +35,17 @@
     "@commitlint/config-conventional": "^8.3.4",
     "@semantic-release/changelog": "^5.0.0",
     "@semantic-release/git": "^9.0.0",
+    "@wordpress/eslint-plugin": "^3.4.1",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsdoc": "^21.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "git+https://github.com/Automattic/wp-prettier.git#wp-prettier-1.18.2",
     "semantic-release": "^17.0.2",
-    "semantic-release-version-bump": "^1.1.0"
+    "semantic-release-version-bump": "^1.3.0"
   },
   "config": {
     "commitizen": {

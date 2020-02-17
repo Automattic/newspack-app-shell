@@ -51,6 +51,7 @@ final class Newspack_App_Shell {
 	public static function register_cpt() {
 		$cpt_args = array(
 			'public'       => false,
+			'show_in_menu' => false,
 			'show_ui'      => true,
 			'show_in_rest' => true,
 			'supports'     => array( 'editor', 'custom-fields' ),
@@ -147,6 +148,11 @@ final class Newspack_App_Shell {
 	 * Load client JS script
 	 */
 	public static function enqueue_scripts_and_style() {
+		if ( ! self::post_id() ) {
+			// No persistent element set, bail.
+			return;
+		}
+
 		wp_register_script(
 			'newspack-app-shell',
 			plugins_url( '/newspack-app-shell' ) . '/dist/client.js',

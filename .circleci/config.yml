@@ -21,23 +21,32 @@ jobs:
           paths:
             - project
 
+  lint:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout_code
+      - run:
+          name: Run Linter
+          command: npm run lint
+
   release:
     docker:
       - image: circleci/node:12
     steps:
       - checkout_code
       - run:
-          name: Build release
-          command: npm run release
-      - run:
           name: Release new version
-          command: npm run semantic-release
+          command: npm run release
 
 workflows:
   version: 2
-  quality_assurance:
+  all:
     jobs:
       - build
+      - lint:
+          requires:
+            - build
       - release:
           requires:
             - build
