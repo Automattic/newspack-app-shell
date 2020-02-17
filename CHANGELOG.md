@@ -1,3 +1,18 @@
+# [1.2.0](https://github.com/Automattic/newspack-app-shell/compare/v1.1.0...v1.2.0) (2020-02-17)
+
+
+### Bug Fixes
+
+* **release:** release files handling ([04f7451](https://github.com/Automattic/newspack-app-shell/commit/04f7451a09d629969b25ee09d39ff416e0df5c60))
+* hide CPT in admin new post menu ([9a7764f](https://github.com/Automattic/newspack-app-shell/commit/9a7764fa23dc17313420e918fe9bf019694e70b1))
+* **client:** run page scripts ([8ce76ec](https://github.com/Automattic/newspack-app-shell/commit/8ce76ec54945bb88e9a70eb0855fdbf9f91d2bda))
+
+
+### Features
+
+* enqueue scripts only if persistent element is present ([#19](https://github.com/Automattic/newspack-app-shell/issues/19)) ([38175a3](https://github.com/Automattic/newspack-app-shell/commit/38175a3240cf34b7435009100fcc8bc58d93a53b))
+* handle form submission ([#18](https://github.com/Automattic/newspack-app-shell/issues/18)) ([4760105](https://github.com/Automattic/newspack-app-shell/commit/4760105acc06114951d3f9b2aa27aa51e38b5d01))
+
 # [1.1.0](https://github.com/Automattic/newspack-app-shell/compare/v1.0.0...v1.1.0) (2020-02-07)
 
 
