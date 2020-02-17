@@ -13,7 +13,8 @@
     "lint": "eslint --ext .js,.jsx src",
     "format": "prettier 'src/**/*.{js,jsx}' --write",
     "clean": "rm -rf dist release",
-    "release": "mkdir -p release && zip -r release/newspack-app-shell.zip . -x node_modules/\\* .git/\\* .github/\\* .gitignore .DS_Store"
+    "release:archive": "mkdir -p release && zip -r release/newspack-app-shell.zip . -x node_modules/\\* vendor/\\* src/\\* .git/\\* .github/\\* .gitignore .DS_Store",
+    "release": "npm run build && npm run semantic-release"
   },
   "keywords": [],
   "license": "ISC",
@@ -44,7 +45,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "prettier": "git+https://github.com/Automattic/wp-prettier.git#wp-prettier-1.18.2",
     "semantic-release": "^17.0.2",
-    "semantic-release-version-bump": "^1.1.0"
+    "semantic-release-version-bump": "^1.3.0"
   },
   "config": {
     "commitizen": {

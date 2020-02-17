@@ -7,6 +7,7 @@ module.exports = {
 			'semantic-release-version-bump',
 			{
 				files: 'newspack-app-shell.php',
+				callback: 'npm run release:archive',
 			},
 		],
 		{
