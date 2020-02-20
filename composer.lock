@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2223f9a4248352a183630d84dd29a03",
+    "content-hash": "e92006735383174d6a22c0ab3b23dfe0",
     "packages": [
         {
             "name": "brainmaestro/composer-git-hooks",
@@ -499,16 +499,16 @@
         },
         {
             "name": "xwp/wp-dev-lib",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/xwp/wp-dev-lib.git",
-                "reference": "86cc5e69b072804c066d10e9008d1576e26aa3cf"
+                "reference": "3e3ced3fdc5c47bbb59cde2f693ce115f2865f82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xwp/wp-dev-lib/zipball/86cc5e69b072804c066d10e9008d1576e26aa3cf",
-                "reference": "86cc5e69b072804c066d10e9008d1576e26aa3cf",
+                "url": "https://api.github.com/repos/xwp/wp-dev-lib/zipball/3e3ced3fdc5c47bbb59cde2f693ce115f2865f82",
+                "reference": "3e3ced3fdc5c47bbb59cde2f693ce115f2865f82",
                 "shasum": ""
             },
             "type": "library",
@@ -533,7 +533,7 @@
             "keywords": [
                 "wordpress"
             ],
-            "time": "2020-01-09T12:33:32+00:00"
+            "time": "2020-02-10T09:35:25+00:00"
         }
     ],
     "packages-dev": [
