@@ -163,6 +163,7 @@ function handleClick( event ) {
 }
 
 const CONTENT_ELEMENT_ID = 'page';
+const NEWSPACK_APP_SHELL_WRAPPER_CLASSNAME = 'newspack-app-shell-wrapper';
 
 /**
  * Fetches HTML document by URL, then replaces the perinent DOM elements
@@ -207,7 +208,9 @@ function loadUrl( url, options = {} ) {
 		headDiff.toAdd.map( el => document.head.appendChild( el ) );
 
 		// diff body, omitting the #page contents
-		const canChangeBodyEl = el => el.id !== CONTENT_ELEMENT_ID;
+		const canChangeBodyEl = el =>
+			el.id !== CONTENT_ELEMENT_ID &&
+			! el.classList.contains( NEWSPACK_APP_SHELL_WRAPPER_CLASSNAME );
 
 		const bodyDiff = compareDOMNodeCollections(
 			document.querySelectorAll( 'body > *' ),
