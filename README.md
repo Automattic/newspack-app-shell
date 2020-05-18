@@ -8,6 +8,9 @@ Objective: A persistent audio player. User should be able to navigate the page, 
 1. CSS transitions can be added by utilising the `newspack-app-shell-transitioning` class that is added to the body element while page is transitioning.
 1. If theme is using the AMP-WP plugin, the AMP plugin should be run in [Transitional mode](https://amp-wp.org/documentation/how-the-plugin-works/amp-plugin-serving-strategies/), because AMP will not allow the custom script on AMP pages.
 
+## AMP
+
+If using the [AMP plugin](https://wordpress.org/plugins/amp/), set it to Transitional mode. The persistent element, when rendered on an AMP page, will link to the non-AMP version of the page.
 
 ## Background
 

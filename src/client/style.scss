@@ -12,6 +12,11 @@
 	&--bottom-fixed {
 		bottom: 0;
 	}
+	&--from-amp-link {
+		> * {
+			pointer-events: none;
+		}
+	}
 }
 
 body.admin-bar {
