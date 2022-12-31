@@ -12,3 +12,4 @@ Objective: A persistent audio player. User should be able to navigate the page, 
 ## Background
 
 Based on [work done in AMP-WP plugin](https://github.com/ampproject/amp-wp/pull/1519). The scope of this work is bigger that what we want to achieve here. In the future the Newspack App Shell plugin might be abandoned in favour of the App Shell feature of AMP-WP plugin.
+test
